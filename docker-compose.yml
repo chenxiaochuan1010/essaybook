@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  essaybook:
+    build: .
+    image: essaybook:0.2
+    container_name: essaybook
+    restart: unless-stopped
+
+    # 家庭内网模式：监听 NAS 的局域网地址，iPad/Mac 直接访问 http://NAS-IP:3000。
+    # 不要把 3000 端口转发到公网；当前没有 PIN，任何能连到 NAS 的设备都能访问。
+    # 想只绑定某个网卡时，在 .env 里设 LAN_BIND=192.168.1.100（并给 NAS 做 DHCP 保留）。
+    user: '${PUID:-1000}:${PGID:-1000}'
+    ports:
+      - '${LAN_BIND:-0.0.0.0}:${APP_PORT:-3000}:3000'
+
+    volumes:
+      - ./data:/app/data
+
+    environment:
+      NODE_ENV: production
+      TZ: ${TZ:-Asia/Shanghai}
+      # 家庭内网用 HTTP 时设 false；如果以后用 Tailscale HTTPS，改成 true。
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      # 每 24 小时自动备份一次，保留最近 30 份自动备份。
+      BACKUP_INTERVAL_HOURS: ${BACKUP_INTERVAL_HOURS:-24}
+      BACKUP_KEEP: ${BACKUP_KEEP:-30}
+
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3

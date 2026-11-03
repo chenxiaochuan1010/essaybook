@@ -1,0 +1,11 @@
+node_modules/
+dist/
+data/
+artifacts/
+*.log
+.DS_Store
+.env
+.env.local
+apps/server/data/
+apps/web/dist/
+coverage/

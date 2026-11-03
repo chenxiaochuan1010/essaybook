@@ -9,6 +9,10 @@
 </p>
 
 <p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License" /></a>
+</p>
+
+<p align="center">
   <img src="docs/screenshots/profile.png" width="760" alt="身份选择页" />
 </p>
 
@@ -155,4 +159,6 @@ data/            本地运行时数据（gitignore）
 
 ## License
 
-个人 / 家庭项目，暂未指定开源许可证。如果需要复用代码，请先联系作者。
+[MIT](LICENSE) © 2026 chenxiaochuan1010
+
+可以自由使用、修改、分发，包括商业用途；请保留版权声明和许可证文本。
